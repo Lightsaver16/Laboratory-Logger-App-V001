@@ -17,7 +17,12 @@ import java.util.List;
 public class Researcher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+            name = "researcher_sequence",
+            sequenceName = "researcher_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "researcher_sequence")
     private Long researcherId;
 
     @NotBlank

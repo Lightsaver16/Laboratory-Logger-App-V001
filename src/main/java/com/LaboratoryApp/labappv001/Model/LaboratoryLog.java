@@ -28,4 +28,12 @@ public class LaboratoryLog {
 
     @ManyToMany(mappedBy = "laboratoryLogs")
     private List<Researcher> researchers;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "laboratory_id",
+            referencedColumnName = "laboratoryId"
+    )
+    @JsonIgnore
+    private Laboratory laboratory;
 }
