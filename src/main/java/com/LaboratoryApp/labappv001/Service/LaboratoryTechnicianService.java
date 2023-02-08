@@ -1,5 +1,6 @@
 package com.LaboratoryApp.labappv001.Service;
 
+import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryTechnicianNotFoundException;
 import com.LaboratoryApp.labappv001.Model.LaboratoryTechnician;
 
@@ -12,4 +13,6 @@ public interface LaboratoryTechnicianService {
     LaboratoryTechnician findTechnicianById(Long technicianId) throws LaboratoryTechnicianNotFoundException;
 
     List<LaboratoryTechnician> findALlTechnicians();
+
+    LaboratoryTechnician assignTechnician(Long technicianId, Long laboratoryId) throws LaboratoryNotFoundException, LaboratoryTechnicianNotFoundException;
 }

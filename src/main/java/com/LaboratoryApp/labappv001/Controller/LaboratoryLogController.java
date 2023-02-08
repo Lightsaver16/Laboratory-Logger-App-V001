@@ -1,6 +1,8 @@
 package com.LaboratoryApp.labappv001.Controller;
 
+import com.LaboratoryApp.labappv001.DTO.LaboratoryLogDTO;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryLogNotFoundException;
+import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Model.LaboratoryLog;
 import com.LaboratoryApp.labappv001.Service.LaboratoryLogService;
 import jakarta.validation.Valid;
@@ -22,10 +24,14 @@ public class LaboratoryLogController {
     }
 
     @PostMapping
-    public ResponseEntity<LaboratoryLog> create(@Valid @RequestBody LaboratoryLog log) {
-        LaboratoryLog laboratoryLog = laboratoryLogService.create(log);
+    public ResponseEntity<LaboratoryLogDTO> create(@RequestBody LaboratoryLogDTO log) {
 
-        return new ResponseEntity<>(laboratoryLog, HttpStatus.CREATED);
+        try {
+            LaboratoryLogDTO laboratoryLog = laboratoryLogService.create(log);
+            return new ResponseEntity<>(laboratoryLog, HttpStatus.CREATED);
+        } catch (LaboratoryNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping

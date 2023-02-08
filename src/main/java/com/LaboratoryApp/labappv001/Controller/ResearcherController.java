@@ -7,11 +7,14 @@ import com.LaboratoryApp.labappv001.Service.ResearcherService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("api/researchers")
 public class ResearcherController {
 
@@ -76,5 +79,20 @@ public class ResearcherController {
 
         return new ResponseEntity<>("Researcher record has been deleted.", HttpStatus.OK);
 
+    }
+
+    @GetMapping("/list")
+    public String listResearchers(Model model) {
+        model.addAttribute("researchers", researcherService.getAllResearchers());
+        return "researchers";
+    }
+
+    @GetMapping("/researchers/new")
+    public String createResearcherForm(Model model) {
+
+        Researcher researcher = new Researcher();
+        model.addAttribute("researcher", researcher);
+
+        return "create-researcher";
     }
 }

@@ -1,5 +1,6 @@
 package com.LaboratoryApp.labappv001.Controller;
 
+import com.LaboratoryApp.labappv001.DTO.LaboratoryDTO;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryTechnicianNotFoundException;
 import com.LaboratoryApp.labappv001.Model.Laboratory;
@@ -29,10 +30,10 @@ public class LaboratoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Laboratory> findLaboratoryById(@PathVariable("id") Long laboratoryId) {
+    public ResponseEntity<LaboratoryDTO> findLaboratoryById(@PathVariable("id") Long laboratoryId) {
 
         try {
-            Laboratory laboratory = laboratoryService.findLaboratoryById(laboratoryId);
+            LaboratoryDTO laboratory = laboratoryService.findLaboratoryById(laboratoryId);
             return new ResponseEntity<>(laboratory, HttpStatus.OK);
         } catch (LaboratoryNotFoundException e) {
             throw new RuntimeException(e);
@@ -58,6 +59,4 @@ public class LaboratoryController {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.LaboratoryApp.labappv001.Service.Implementation;
 
+import com.LaboratoryApp.labappv001.DTO.LaboratoryDTO;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryTechnicianNotFoundException;
 import com.LaboratoryApp.labappv001.Model.Laboratory;
@@ -7,6 +8,7 @@ import com.LaboratoryApp.labappv001.Model.LaboratoryTechnician;
 import com.LaboratoryApp.labappv001.Repository.LaboratoryRepository;
 import com.LaboratoryApp.labappv001.Repository.LaboratoryTechnicianRepository;
 import com.LaboratoryApp.labappv001.Service.LaboratoryService;
+import com.LaboratoryApp.labappv001.Utility.LaboratoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,13 @@ public class LaboratoryServiceImplementation implements LaboratoryService {
 
     private LaboratoryTechnicianRepository laboratoryTechnicianRepository;
 
+    private LaboratoryMapper laboratoryMapper;
+
     @Autowired
-    public LaboratoryServiceImplementation(LaboratoryRepository laboratoryRepository, LaboratoryTechnicianRepository laboratoryTechnicianRepository) {
+    public LaboratoryServiceImplementation(LaboratoryRepository laboratoryRepository, LaboratoryTechnicianRepository laboratoryTechnicianRepository, LaboratoryMapper laboratoryMapper) {
         this.laboratoryRepository = laboratoryRepository;
         this.laboratoryTechnicianRepository = laboratoryTechnicianRepository;
+        this.laboratoryMapper = laboratoryMapper;
     }
 
     @Override
@@ -32,14 +37,14 @@ public class LaboratoryServiceImplementation implements LaboratoryService {
     }
 
     @Override
-    public Laboratory findLaboratoryById(Long laboratoryId) throws LaboratoryNotFoundException {
+    public LaboratoryDTO findLaboratoryById(Long laboratoryId) throws LaboratoryNotFoundException {
         Optional<Laboratory> laboratory = laboratoryRepository.findById(laboratoryId);
 
         if (laboratory.isEmpty()) {
             throw new LaboratoryNotFoundException(laboratoryId);
         }
 
-        return laboratory.get();
+        return laboratoryMapper.toLaboratoryDTO(laboratory.get());
     }
 
     @Override

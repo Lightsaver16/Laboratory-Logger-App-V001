@@ -34,10 +34,6 @@ public class LaboratoryTechnician {
     @Column(name = "contact_number")
     private String contactNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "laboratory_id",
-            referencedColumnName = "laboratoryId"
-    )
+    @OneToOne(mappedBy = "technician")
     private Laboratory laboratory;
 }

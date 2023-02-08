@@ -1,9 +1,13 @@
 package com.LaboratoryApp.labappv001.Service.Implementation;
 
+import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryTechnicianNotFoundException;
+import com.LaboratoryApp.labappv001.Model.Laboratory;
 import com.LaboratoryApp.labappv001.Model.LaboratoryTechnician;
+import com.LaboratoryApp.labappv001.Repository.LaboratoryRepository;
 import com.LaboratoryApp.labappv001.Repository.LaboratoryTechnicianRepository;
 import com.LaboratoryApp.labappv001.Service.LaboratoryTechnicianService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +18,12 @@ public class LaboratoryTechnicianImplementation implements LaboratoryTechnicianS
 
     private LaboratoryTechnicianRepository laboratoryTechnicianRepository;
 
-    public LaboratoryTechnicianImplementation(LaboratoryTechnicianRepository laboratoryTechnicianRepository) {
+    private LaboratoryRepository laboratoryRepository;
+
+    @Autowired
+    public LaboratoryTechnicianImplementation(LaboratoryTechnicianRepository laboratoryTechnicianRepository, LaboratoryRepository laboratoryRepository) {
         this.laboratoryTechnicianRepository = laboratoryTechnicianRepository;
+        this.laboratoryRepository = laboratoryRepository;
     }
 
     @Override
@@ -37,5 +45,24 @@ public class LaboratoryTechnicianImplementation implements LaboratoryTechnicianS
     @Override
     public List<LaboratoryTechnician> findALlTechnicians() {
         return laboratoryTechnicianRepository.findAll();
+    }
+
+    @Override
+    public LaboratoryTechnician assignTechnician(Long technicianId, Long laboratoryId) throws LaboratoryNotFoundException, LaboratoryTechnicianNotFoundException {
+
+        Optional<LaboratoryTechnician> technician = laboratoryTechnicianRepository.findById(technicianId);
+        Optional<Laboratory> laboratory = laboratoryRepository.findById(laboratoryId);
+
+
+        if (technician.isEmpty()) {
+            throw new LaboratoryTechnicianNotFoundException(technicianId);
+        }
+
+        if (laboratory.isEmpty()) {
+            throw new LaboratoryNotFoundException(laboratoryId);
+        }
+
+        technician.get().setLaboratory(laboratory.get());
+        return laboratoryTechnicianRepository.save(technician.get());
     }
 }

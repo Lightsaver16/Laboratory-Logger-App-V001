@@ -1,8 +1,12 @@
 package com.LaboratoryApp.labappv001.Service.Implementation;
 
+import com.LaboratoryApp.labappv001.DTO.LaboratoryLogDTO;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryLogNotFoundException;
+import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
+import com.LaboratoryApp.labappv001.Model.Laboratory;
 import com.LaboratoryApp.labappv001.Model.LaboratoryLog;
 import com.LaboratoryApp.labappv001.Repository.LaboratoryLogRepository;
+import com.LaboratoryApp.labappv001.Repository.LaboratoryRepository;
 import com.LaboratoryApp.labappv001.Service.LaboratoryLogService;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +19,28 @@ public class LaboratoryLogServiceImplementation implements LaboratoryLogService 
 
     private LaboratoryLogRepository laboratoryLogRepository;
 
-    public LaboratoryLogServiceImplementation(LaboratoryLogRepository laboratoryLogRepository) {
+    private LaboratoryRepository laboratoryRepository;
+
+    public LaboratoryLogServiceImplementation(LaboratoryLogRepository laboratoryLogRepository, LaboratoryRepository laboratoryRepository) {
         this.laboratoryLogRepository = laboratoryLogRepository;
+        this.laboratoryRepository = laboratoryRepository;
     }
 
     @Override
-    public LaboratoryLog create(LaboratoryLog laboratoryLog) {
-        return laboratoryLogRepository.save(laboratoryLog);
+    public LaboratoryLogDTO create(LaboratoryLogDTO laboratoryLogDTO) throws LaboratoryNotFoundException {
+        Optional<Laboratory> laboratory = laboratoryRepository.findById(laboratoryLogDTO.getLaboratoryId());
+
+        if (laboratory.isEmpty()) {
+            throw new LaboratoryNotFoundException(laboratoryLogDTO.getLaboratoryId());
+        }
+        LaboratoryLog log = new LaboratoryLog();
+        log.setDate(laboratoryLogDTO.getDate());
+        log.setTime(laboratoryLogDTO.getTime());
+        log.setLaboratory(laboratory.get());
+        log.setResearchers(laboratoryLogDTO.getResearchers());
+        laboratoryLogRepository.save(log);
+
+        return laboratoryLogDTO;
     }
 
     @Override

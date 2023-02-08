@@ -1,5 +1,6 @@
 package com.LaboratoryApp.labappv001.Controller;
 
+import com.LaboratoryApp.labappv001.Exception.LaboratoryNotFoundException;
 import com.LaboratoryApp.labappv001.Exception.LaboratoryTechnicianNotFoundException;
 import com.LaboratoryApp.labappv001.Model.LaboratoryTechnician;
 import com.LaboratoryApp.labappv001.Service.LaboratoryTechnicianService;
@@ -38,5 +39,16 @@ public class LaboratoryTechnicianController {
     public ResponseEntity<List<LaboratoryTechnician>> findAllTechnicians() {
         List<LaboratoryTechnician> technicians = laboratoryTechnicianService.findALlTechnicians();
         return new ResponseEntity<>(technicians, HttpStatus.OK);
+    }
+    @PutMapping("/{technicianId}/laboratories/{laboratoryId}")
+    public ResponseEntity<LaboratoryTechnician> assignTechnician(@PathVariable("technicianId") Long technicianId,
+                                                                 @PathVariable("laboratoryId") Long laboratoryId) {
+
+        try {
+            LaboratoryTechnician technician = laboratoryTechnicianService.assignTechnician(technicianId, laboratoryId);
+            return new ResponseEntity<>(technician, HttpStatus.OK);
+        } catch (LaboratoryNotFoundException | LaboratoryTechnicianNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

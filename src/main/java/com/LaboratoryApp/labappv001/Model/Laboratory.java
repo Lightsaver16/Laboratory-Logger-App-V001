@@ -1,5 +1,7 @@
 package com.LaboratoryApp.labappv001.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -31,6 +33,8 @@ public class Laboratory {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laboratory")
     private List<LaboratoryLog> logs;
 
-    @OneToOne(mappedBy = "laboratory")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "technician_id", referencedColumnName = "id")
+    @JsonIgnore
     private LaboratoryTechnician technician;
 }
